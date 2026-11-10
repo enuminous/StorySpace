@@ -1,0 +1,78 @@
+{
+  "schema": "storyspace-SS-001-protocol-v1",
+  "created_date": "2026-11-09",
+  "status": "PROPOSED_NOT_EXECUTED",
+  "protocol_kind": "prospective self-report + binary prediction scoring, not causal retrocausality experiment",
+  "hypothesis": "H1: self-reported feeling of foreknowledge predicts prespecified objectively assessable binary outcomes above prospectively fixed base-rate and ordinary predictive controls",
+  "null": "H0: no improvement over predeclared baselines after accounting for reporting, selection, and multiple comparisons",
+  "scope": "Illustrative self-tracking study design, not external preregistration, blind study or clinical measurement",
+  "unit_of_analysis": "One pre-event, binary, time-bounded, inspectable outcome prediction",
+  "outcome_values": [
+    0,
+    1
+  ],
+  "required_before_outcome": [
+    "unique record ID",
+    "experience report",
+    "concrete event specification",
+    "deadline",
+    "probability in [0,1]",
+    "independent event adjudication plan",
+    "chosen baseline with justification",
+    "eligibility criteria",
+    "predefined sample size and stopping rule",
+    "independent custody timestamp",
+    "hash or version identifying fixed content"
+  ],
+  "common_failures": [
+    "hindsight reconstruction",
+    "multiple unreported guesses",
+    "subjective scoring",
+    "post hoc change of threshold or target event",
+    "unlogged abstentions",
+    "non-independent events",
+    "insufficient calibration",
+    "failed timestamp custody"
+  ],
+  "status_classes": [
+    "OBSERVED_SELF_REPORT",
+    "LOCAL_FREEZE_NOT_CUSTODY",
+    "EXTERNAL_FROZEN",
+    "SCORED_UNVERIFIED",
+    "VERIFIED",
+    "PASS",
+    "FAIL",
+    "UNRESOLVED",
+    "SIMULATED"
+  ],
+  "statistics": {
+    "primary": "mean Brier loss across all prospectively eligible binary forecasts; smaller is better",
+    "formula": "mean((p_i - y_i)^2)",
+    "baseline": "Must be set from external training/base-rate data before target outcomes; 0.5 in app is a noncalibrated toy comparison only",
+    "interpretation": "A fixed chance or accuracy benchmark alone cannot establish effect or causality",
+    "multiplicity": "Specify subgroup and multiple-testing adjustments in a subsequent locked execution plan; no post hoc new primary outcomes",
+    "null_test": "Compare paired losses to predeclared calibrated conventional predictor on held-out data; confidence intervals and power must be specified before use",
+    "minimum_future_requirements": "No execution/sample-size, power or effect threshold was frozen at repository creation. Therefore no confirmatory experiment is presently ready."
+  },
+  "freeze": {
+    "local_behavior": "app prevents ordinary UI edits to frozen fields; browser storage, device time and app source are mutable",
+    "external_custody": "To support actual temporal priority, commit JSON to independent append-only log / signed external timestamp before event",
+    "amendments": "Any correction after freeze creates a new record with amendedFrom pointer; original archived externally must remain unchanged",
+    "not_guaranteed": "Browser-only local freeze is not a tamper-proof, third-party timestamp"
+  },
+  "claim_tree": {
+    "leaf": "PASS|FAIL|UNRESOLVED per scoped evidence",
+    "parent": "FAIL if any required child FAIL; PASS only when all required child PASS; otherwise UNRESOLVED",
+    "cycles": "invalid",
+    "interpretation": "Logical workflow statuses, not actual theorem-proof checking"
+  },
+  "postselection_toy": {
+    "data": "synthetic deterministic x bins and preassigned labels",
+    "demonstration": "reveal or hide subgroup labels without changing raw marginal histogram",
+    "exclusion": "not simulation of an actual quantum eraser or backward causation"
+  },
+  "privacy": "No health records, invasive inference, data uploads or telemetry; user-controlled browser storage and manual JSON export/import",
+  "stop_rule": "Stop the specific prospective predictive-skill claim if adequate precommitted sample fails the predefined improvement threshold. The current project has not fixed a sample size or started a confirmatory run.",
+  "physical_interpretation": "No operationally demonstrated backward-in-time signaling; any future predictive advantage would require ordinary mechanisms to be compared before retrocausal interpretation.",
+  "approval_needed": "Prospective research involving participants must be separately designed and ethically reviewed when applicable."
+}
