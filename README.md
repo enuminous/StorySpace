@@ -13,7 +13,7 @@
 
 ## Live observatory
 
-**[Open StorySpace](https://enuminous.github.io/StorySpace/)** (GitHub Pages requires an initial deployment/enablement by the repository owner if not yet configured.)
+**[Expected GitHub Pages address](https://enuminous.github.io/StorySpace/)** — becomes accessible after Pages is enabled under **Settings → Pages → Deploy from branch → main / root**. I have **not verified Pages activation**. Follow the [deployment instructions](docs/DEPLOY.md), or open `index.html` locally.
 
 The [index.html](index.html) application also works as an offline site when opened locally. It uses no external scripts, trackers, web APIs, or data uploads.
 
@@ -52,7 +52,7 @@ A report of *"I knew this would happen"* is not evidence of foreknowledge unless
 
 ### Reproduce the local controls
 
-Requires Node.js 20+ (no dependencies):
+Requires Node.js 20+ (no dependencies). [GitHub Actions](https://github.com/enuminous/StorySpace/actions) runs the same controls automatically:
 
 ~~~sh
 node --test tests/core.test.cjs
