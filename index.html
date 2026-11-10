@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StorySpace · An Observatory for the Things Time Makes Us Feel</title>
+<meta name="description" content="StorySpace: an interactive, local-first observatory for déjà vu, memory, post-selection, prospective predictions, and evidence discipline.">
+<meta name="color-scheme" content="dark">
+<style>
+:root{--ink:#e8eaf5;--muted:#a0a9c2;--bg:#070b18;--panel:#10182b;--panel2:#0b1325;--line:#2b3a54;--accent:#a5ec79;--cyan:#7cdbea;--violet:#b19af4;--warning:#edc684;--red:#f09a9f;--shadow:0 18px 60px #0008}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 70% -17%,#28304e 0,transparent 42%),radial-gradient(circle at 5% 58%,#16263e 0,transparent 42%),var(--bg);font:15px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+a{color:var(--cyan)}a:hover{color:#fff}button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+[hidden]{display:none!important}
+.shell{display:grid;grid-template-columns:265px minmax(0,1fr);max-width:1800px;min-height:100vh;margin:0 auto}
+.sidebar{border-right:1px solid var(--line);padding:26px 17px;display:flex;flex-direction:column;gap:34px;background:linear-gradient(180deg,#0e172c,#0a1020);position:sticky;top:0;align-self:start;min-height:100vh}
+.logo{display:flex;align-items:center;gap:12px;padding:6px 6px 0}
+.orbit{height:42px;width:42px;border:2px solid var(--accent);border-radius:50%;display:grid;place-items:center;color:var(--accent);font-weight:900;font-size:25px;transform:rotate(-20deg);box-shadow:0 0 24px #a5ec7922}
+.brand{font-size:21px;font-weight:900;letter-spacing:-.05em;line-height:1}
+.brand small{display:block;font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--muted);margin-top:8px}
+.side-label{font:700 10px/1.4 ui-monospace,monospace;letter-spacing:.22em;color:#8493b4;margin:0 12px 12px}
+.tab{width:100%;background:none;border:1px solid transparent;border-radius:10px;padding:13px 14px;text-align:left;color:#b4c3df;font-weight:650;font-size:13px;display:flex;align-items:center;gap:12px}
+.tab .number{font:700 11px ui-monospace,monospace;color:#6b82a9}
+.tab:hover{border-color:#435678;background:#192740}
+.tab.active{color:#111a16;background:var(--accent);box-shadow:0 2px 24px #a5ec791d}
+.tab.active .number{color:#385636}
+.side-foot{margin-top:auto;padding:18px 12px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+.side-foot strong{display:block;color:var(--accent);letter-spacing:.1em;font-size:10px;margin-bottom:6px}
+.side-foot a{display:block;margin-top:9px}
+.content{padding:23px clamp(22px,4vw,66px) 60px;min-width:0}
+.topbar{display:flex;gap:20px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 22px}
+.topbar h2{font-size:11px;letter-spacing:.23em;text-transform:uppercase;font-weight:800;color:var(--cyan);margin:3px 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#1b2942;color:#eaf1fe;padding:10px 14px;border-radius:8px;font:750 11px ui-monospace,monospace;letter-spacing:.07em}
+.btn:hover{background:#324462;border-color:#7086aa}
+.btn.primary{background:var(--accent);color:#132010;border-color:var(--accent)}
+.btn.primary:hover{background:#c4fa9f}
+.btn.danger{color:#f3b0b0}
+.mono,.eyebrow,.micro,.tag,.record-id{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.eyebrow{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--cyan);font-weight:800}
+.hero{padding:68px 0 45px;position:relative}
+.hero:before{content:"∴";position:absolute;right:3%;top:0;font-family:Georgia,serif;color:#a5ec790d;font-size:clamp(200px,35vw,480px);line-height:1;pointer-events:none}
+.hero h1{max-width:960px;font-size:clamp(45px,7.6vw,110px);letter-spacing:-.085em;line-height:.98;font-weight:840;margin:15px 0 20px;position:relative}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero .lead{max-width:720px;font-size:clamp(16px,2vw,20px);line-height:1.5;color:#c8d0e5}
+.hero .minor{max-width:720px;color:var(--muted);font-size:13px;margin:17px 0}
+.hero-cta{margin-top:30px;display:flex;gap:10px;flex-wrap:wrap}
+.hero-cta .tab{width:auto;padding:12px 18px;background:#253b35;color:var(--accent);border:1px solid #476f5a}
+.hero-cta .tab:hover{background:#304e43}
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.rule{border:1px solid var(--line);border-radius:12px;padding:24px;min-height:220px;background:linear-gradient(135deg,#132036 0%,#0c1326 100%);position:relative;overflow:hidden}
+.rule:after{content:attr(data-glyph);position:absolute;right:16px;bottom:-50px;font:200px/1 Georgia,serif;color:#ffffff06;pointer-events:none}
+.rule h3{font-size:23px;margin:9px 0 7px;letter-spacing:-.045em}
+.rule p{color:#adbad2;font-size:13px;max-width:330px}
+.rule:nth-child(1){border-top:3px solid var(--cyan)}.rule:nth-child(2){border-top:3px solid var(--violet)}.rule:nth-child(3){border-top:3px solid var(--accent)}
+.rule:nth-child(1) .eyebrow{color:var(--cyan)}.rule:nth-child(2) .eyebrow{color:var(--violet)}.rule:nth-child(3) .eyebrow{color:var(--accent)}
+.sectionhead{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:43px 0 16px}
+.sectionhead h2{font-size:27px;line-height:1.15;margin:5px 0;font-weight:780;letter-spacing:-.045em}
+.sectionhead p{color:var(--muted);max-width:620px;margin:0;font-size:13px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.metric{background:#111d33;border:1px solid var(--line);border-radius:9px;padding:18px}
+.metric strong{display:block;font-size:37px;line-height:1.15;letter-spacing:-.06em;margin:12px 0;color:#e6f5f0}
+.metric:nth-child(2) strong{color:var(--accent)}
+.metric:nth-child(3) strong{color:var(--cyan)}
+.metric small{color:#90a1c0;letter-spacing:.15em;font:750 10px ui-monospace,monospace}
+.panel{background:linear-gradient(155deg,#10192d 0%,#0d1628 100%);border:1px solid var(--line);border-radius:13px;padding:clamp(18px,3vw,30px);margin:20px 0}
+.panel h3{margin:2px 0 10px;font-size:21px;letter-spacing:-.035em}
+.panel p{color:#bbc6d9}
+.boundary{border-left:3px solid var(--warning);background:#2a251eaa;padding:15px 19px;color:#f1dfb7;border-radius:4px;font-size:13px}
+.boundary b{color:#ffe7a3}
+.note{font-size:12px;color:#92a5c1}
+.view{padding-bottom:30px}
+.page-title{margin:50px 0 10px;font-size:clamp(35px,5vw,69px);line-height:1.08;letter-spacing:-.065em}
+.page-lead{font-size:17px;color:#bcc9e0;max-width:820px;margin:12px 0 30px}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:15px}
+.field label{font:800 10px ui-monospace,monospace;letter-spacing:.13em;color:#acc6e0;text-transform:uppercase}
+.field small{color:#9cabca;font-size:11px}
+.field input,.field textarea,.field select{width:100%;min-width:0;background:#081022;border:1px solid #334560;border-radius:7px;padding:12px 13px;color:#e8f0ff}
+.field textarea{min-height:94px;resize:vertical}
+.field input[type=range]{accent-color:var(--accent);padding:4px}
+.field input::placeholder,.field textarea::placeholder{color:#73809b}
+.field.full{grid-column:1/-1}
+.formfooter{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px}
+.empty{border:1px dashed #3b4e70;padding:33px;border-radius:11px;color:#9aacc5;background:#0c1527;line-height:1.6}
+.empty .empty-symbol{font:76px/1 Georgia,serif;color:var(--accent);margin-bottom:13px}
+.record{padding:22px 24px;margin:14px 0;border:1px solid var(--line);background:#101b31;border-radius:11px}
+.record-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.record h3{font-size:19px;line-height:1.45;margin:14px 0}
+.story-desc{font-size:13px;color:#b4c3da;border-left:2px solid var(--violet);padding-left:11px}
+.eyebrow-inline{font:800 11px ui-monospace,monospace;letter-spacing:.12em;color:var(--violet);margin-right:5px}
+.forecast-line{padding:13px 16px;background:#081225;border-radius:8px;margin:13px 0;font-size:13px;color:#b4c4dc}
+.forecast-line strong{font:800 10px ui-monospace,monospace;color:var(--cyan);letter-spacing:.1em}
+.forecast-line p{color:#ecf3ff;margin:7px 0}
+.forecast-line small{color:#91a5c5}
+.result-line{padding:13px;color:var(--accent);font-size:13px}
+.result-line p{margin:5px 0;color:#c3cee2}
+.warning-text{color:var(--warning)}
+.record-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.smallbtn{border:1px solid #4b5e7d;background:#25354f;color:#e2ecff;font:800 10px ui-monospace,monospace;padding:9px 12px;border-radius:6px}
+.smallbtn.primary{background:#b4f283;color:#182510;border-color:#b4f283}
+.record-id{color:#71829e;font-size:10px;margin-left:auto;overflow-wrap:anywhere}
+.tag{display:inline-block;font-size:10px;letter-spacing:.07em;font-weight:800;line-height:1.5;padding:4px 8px;border:1px solid #62728b;border-radius:4px;color:#b9c9dd;background:#17243a}
+.tag.good{border-color:#60864d;color:#baf8a0;background:#213b22}
+.tag.warning{border-color:#9e7946;color:#edcd8f;background:#392d1d}
+.tag.bad{border-color:#914c55;color:#ffacb4;background:#3b252a}
+.tag.neutral{color:#b4c7e4}
+.claim{display:flex;gap:15px;align-items:flex-start;padding:18px;border-bottom:1px solid var(--line)}
+.claim h3{margin:0 0 4px;font-size:16px}
+.claim p{margin:0;color:#a5b7d4;font-size:13px}
+.claim small{color:#7e92b1}
+.diagram{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chart{background:#081225;border:1px solid var(--line);border-radius:9px;padding:17px}
+.chart strong{display:block;margin:3px 0 9px;font:800 11px ui-monospace,monospace;letter-spacing:.1em}
+.barset{height:150px;display:flex;align-items:flex-end;gap:2px;border-bottom:1px solid #344668;padding-top:10px}
+.bin{height:100%;flex:1;display:flex;align-items:flex-end;min-width:0}
+.bar{width:100%;border-radius:2px 2px 0 0;min-height:2px;background:#72d8e5}
+.bar.raw{background:var(--cyan)}.bar.a{background:var(--accent)}.bar.b{background:var(--violet)}
+.chart .legend{font:10px ui-monospace,monospace;color:#9fb1d1;margin-top:8px}
+.source{display:block;padding:18px;margin:12px 0;border:1px solid var(--line);border-radius:9px;text-decoration:none;background:#111c31}
+.source:hover{background:#1b2942}
+.source b{display:block;font-size:15px;color:#e5f2ff}
+.source small{color:#91a4c5}
+.subnote{font-size:12px;color:#9cb4d0;margin-top:11px}
+.toast{position:fixed;right:25px;bottom:20px;z-index:20;background:#203b33;color:#d6ffb8;border:1px solid #618e70;border-radius:8px;padding:12px 16px;max-width:min(500px,90vw);box-shadow:var(--shadow);font-size:13px;opacity:0;pointer-events:none;transform:translateY(10px)}
+.toast.visible{opacity:1;transform:none}.toast.error{background:#46232a;border-color:#bd727e;color:#ffe3e6}
+.footer{border-top:1px solid var(--line);padding:22px 0 7px;margin-top:40px;font-size:12px;color:#92a7c5;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:1080px){.shell{grid-template-columns:210px 1fr}.sidebar{padding-inline:10px}.content{padding-inline:26px}.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:750px){.shell{display:block}.sidebar{position:relative;min-height:0;display:block;padding:13px 15px}.logo{display:inline-flex;padding:0}.sidebar nav{display:flex;overflow:auto;gap:5px;margin-top:17px}.side-label,.side-foot{display:none}.tab{white-space:nowrap;width:auto;min-width:max-content;padding:11px}.content{padding:15px 18px 50px}.topbar{align-items:flex-start;flex-direction:column}.hero{padding-top:43px}.rules{grid-template-columns:1fr}.rule{min-height:175px}.diagram{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+@media(max-width:420px){.metrics{grid-template-columns:repeat(2,1fr)}.metric strong{font-size:29px}.btn{padding:9px 10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <div class="logo"><div class="orbit" aria-hidden="true">∴</div><div class="brand">StorySpace<small>EFMW · OBSERVATORY 001</small></div></div>
+  <nav aria-label="StorySpace sections"><p class="side-label">THE OBSERVATORY</p>
+    <button type="button" class="tab active" data-tab="overview"><span class="number">01</span> Overview</button>
+    <button type="button" class="tab" data-tab="journal"><span class="number">02</span> Experience ledger</button>
+    <button type="button" class="tab" data-tab="filter"><span class="number">03</span> Quantum-filter toy</button>
+    <button type="button" class="tab" data-tab="claims"><span class="number">04</span> Claim recursion</button>
+    <button type="button" class="tab" data-tab="sources"><span class="number">05</span> Sources &amp; limits</button>
+  </nav>
+  <div class="side-foot"><strong>THE ZOO ABIDES</strong>The story arrives after the signal and feels like part of it.<a href="https://github.com/enuminous/StorySpace" target="_blank" rel="noopener">View source repository ↗</a></div>
+</aside>
+<main class="content">
+  <div class="topbar"><div><div class="eyebrow">MONOLITHIC LLC / THE EVIDENCE ZOO</div><h2 id="activeLabel">SIGNAL / STORY / EVIDENCE</h2></div>
+    <div class="actions"><button class="btn" id="exportButton" type="button">EXPORT JSON</button><button class="btn" id="importButton" type="button">IMPORT</button><button class="btn danger" id="resetButton" type="button">CLEAR LOCAL</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
+  </div>
+
+  <section class="view" data-view="overview">
+    <div class="hero"><span class="eyebrow">TIME · MEMORY · FAMILIARITY · UNCERTAINTY</span>
+      <h1>The signal is real.<br><em>The story can be wrong.</em></h1>
+      <p class="lead">An observatory for the strange things time makes us feel. Keep the experience. Question the explanation. Demand evidence that could have turned out differently.</p>
+      <p class="minor">Déjà vu is worth studying. Retrocausal signaling has not been established. Your subjective experience does not need a supernatural explanation to be meaningful.</p>
+      <div class="hero-cta"><button class="tab" data-tab="journal">RECORD AN EXPERIENCE ↗</button><button class="tab" data-tab="filter">OPEN THE TIME FILTER ↗</button></div>
+    </div>
+    <div class="rules">
+      <article class="rule" data-glyph="S"><div class="eyebrow">01 · DIRECT EXPERIENCE</div><h3>Signalspace</h3><p>The sensation: "I remember this"; "I dreamed it"; "I knew it would happen." Record the phenomenon without baking in the cause.</p></article>
+      <article class="rule" data-glyph="N"><div class="eyebrow">02 · CONSTRUCTED MEANING</div><h3>Storyspace</h3><p>The explanation added by the mind: familiarity, intuition, coincidence, predictive inference or a speculative time effect. It remains a hypothesis.</p></article>
+      <article class="rule" data-glyph="E"><div class="eyebrow">03 · INDEPENDENT TEST</div><h3>Evidencespace</h3><p>What did you freeze before the event? What would count against it? Who can verify the outcome without rewriting the past?</p></article>
+    </div>
+    <div class="sectionhead"><div><div class="eyebrow">LOCAL RESEARCH TELEMETRY</div><h2>Observatory status</h2></div><p>These counts are from this browser only. Not scientific population data.</p></div>
+    <div class="metrics">
+      <div class="metric"><small>EXPERIENCES</small><strong id="metricExperiences">0</strong></div>
+      <div class="metric"><small>LOCAL FREEZES</small><strong id="metricFrozen">0</strong></div>
+      <div class="metric"><small>SELF-SCORED</small><strong id="metricResolved">0</strong></div>
+      <div class="metric"><small>MEAN BRIER LOSS</small><strong id="metricScore">—</strong></div>
+    </div>
+    <div class="panel"><h3>Do not confuse the report with the explanation.</h3><p id="countNote">No entries yet.</p><p id="scoreNote">No scored predictions.</p><div class="boundary"><b>Protocol boundary:</b> A browser-only freeze is not an externally authenticated timestamp. Export a pre-event record to independent custody. A good forecast score, even if verified, does not uniquely demonstrate retrocausality.</div></div>
+  </section>
+
+  <section class="view" data-view="journal" hidden>
+    <h1 class="page-title">The experience ledger.</h1><p class="page-lead">Write what happened to your awareness before you write why. Predictions are optional; the act of feeling something is not itself an experimental result.</p>
+    <div class="panel"><div class="eyebrow">NEW RECORD · PRIVATE TO THIS BROWSER</div><h3>Signal → Story → Optional prediction</h3>
+      <form id="recordForm">
+        <div class="formgrid">
+          <div class="field"><label for="kind">Experience category</label><select name="kind" id="kind"><option value="deja-vu">Déjà vu</option><option value="premonition">Apparent premonition</option><option value="dream">Dream resemblance</option><option value="temporal-anomaly">Other temporal anomaly</option><option value="ordinary">Ordinary prediction</option><option value="other">Other</option></select></div>
+          <div class="field"><label for="sensation">What did you experience?</label><textarea id="sensation" name="sensation" minlength="5" required placeholder="A sudden, vivid feeling of familiarity..."></textarea></div>
+          <div class="field full"><label for="interpretation">What story did your mind tell?</label><textarea name="interpretation" id="interpretation" placeholder="Perhaps I'd seen a similar scene before, or perhaps it was a premonition..."></textarea><small>This is an interpretation, not an observed physical cause.</small></div>
+          <div class="field full"><label for="eventDef">Specific future event (optional)</label><textarea id="eventDef" name="event" placeholder="Example: A named team will win its scheduled match before midnight on Nov 20. Define the source of the outcome."></textarea><small>If this is blank, your entry is a signal-only report.</small></div>
+          <div class="field"><label for="deadline">Deadline, local time (if predicting)</label><input type="datetime-local" name="deadline" id="deadline"></div>
+          <div class="field"><label for="probability">Your probability · <span id="probabilityValue">60%</span></label><input type="range" id="probability" name="probability" min="0" max="100" step="1" value="60"><small>Probability of the exactly defined event occurring.</small></div>
+        </div>
+        <div class="formfooter"><button class="btn primary" type="submit">SAVE NEW RECORD</button><span class="note">Save first. Freeze separately. Later edits require a new amendment.</span></div>
+      </form>
+    </div>
+    <div class="boundary"><b>Privacy and provenance:</b> These are local records, stored in this browser when permitted. They are not uploaded by the app. Device clocks and local storage can be changed. Export a pre-event snapshot and commit it to external custody for an independently inspectable timestamp.</div>
+    <div class="sectionhead"><div><div class="eyebrow">LOCAL CASEFILES</div><h2>Records and revisions</h2></div><p>A locally frozen record stays unchanged through this interface; amendments create new entries.</p></div>
+    <div id="records"></div>
+  </section>
+
+  <section class="view" data-view="filter" hidden>
+    <h1 class="page-title">The post-selection chamber.</h1><p class="page-lead">A later sorting rule can reveal patterns in subgroups without changing any earlier observation. The filter is not a time machine.</p>
+    <div class="boundary"><b>Constructed toy, not quantum data.</b> This is a deterministic synthetic example of conditional distributions and selection. It does not reproduce a quantum eraser, test interpretations of quantum mechanics, or model information traveling into the past.</div>
+    <div class="sectionhead"><div><div class="eyebrow">FIXED EARLIER MARGINAL</div><h2>2,520 observations · 21 bins</h2></div><p>Seed: 20261109. The raw counts are frozen by the toy generator.</p></div>
+    <div class="chart"><strong>UNCONDITIONED COUNT DISTRIBUTION</strong><div id="rawBars"></div><div class="legend">RAW X · earlier events · flat by construction</div></div>
+    <div class="panel"><h3>Press the button and watch what does <em>not</em> happen.</h3><p id="filterMessage"></p><button id="filterButton" class="btn primary" type="button">REVEAL LATER LABELS</button><p class="subnote">A subgroup is not an altered past. For every bin: RAW = GROUP A + GROUP B.</p></div>
+    <div id="partitionView" class="diagram" hidden><div class="chart"><strong>CONDITIONED SUBSET A</strong><div id="aBars"></div><div class="legend">A · engineered selection oscillation</div></div><div class="chart"><strong>CONDITIONED SUBSET B</strong><div id="bBars"></div><div class="legend">B · complementary selection oscillation</div></div></div>
+    <div class="sectionhead"><div><div class="eyebrow">INTERPRETATION CHECK</div><h2>Why this matters</h2></div></div>
+    <div class="panel"><p>Imagine two parties later compare matching detection records. They can recover conditional structures invisible in the unsorted counts. That does not change the marginal distribution available to the earlier observer. The experiment must be analyzed with its real instruments, timing, selection rules and no-signaling constraints—not by treating coincidence sorting as a rewrite of history.</p><p>Relevant landmark: <a href="https://doi.org/10.1103/PhysRevLett.84.1" target="_blank" rel="noopener">Kim et al. (2000), delayed-choice quantum eraser</a>.</p></div>
+  </section>
+
+  <section class="view" data-view="claims" hidden>
+    <h1 class="page-title">The recursion tree.</h1><p class="page-lead">A claim inherits the obligations of its dependencies. No theatrical confidence can make an unsupported child become a proven parent.</p>
+    <div class="panel"><div class="eyebrow">CLAIM GRAPH · EXPLICIT GATES</div><h3>Add a scoped claim or evidentiary requirement</h3>
+      <form id="claimForm"><div class="formgrid">
+        <div class="field full"><label for="claimText">Claim text</label><input id="claimText" name="text" required minlength="8" placeholder="Recorded prediction had independent custody before event"></div>
+        <div class="field"><label for="claimVerdict">Leaf evidence status</label><select id="claimVerdict" name="verdict"><option>UNRESOLVED</option><option>PASS</option><option>FAIL</option></select></div>
+        <div class="field"><label for="claimRequires">Required child IDs (comma-separated)</label><input id="claimRequires" name="requires" placeholder="CL-xxx, CL-yyy"><small>If present, this parent's status is computed from those children.</small></div>
+        <div class="field full"><label for="claimEvidence">Evidence or limitation</label><textarea id="claimEvidence" name="evidence" placeholder="Which file, experiment, observation, or gap bears on this exact statement?"></textarea></div>
+      </div><button type="submit" class="btn primary">ADD CLAIM TO GRAPH</button></form>
+    </div>
+    <div class="boundary"><b>Derivation rule:</b> A parent is FAIL when any mandatory child FAILs, PASS only when all mandatory children PASS, and UNRESOLVED otherwise. Cyclic or missing references are rejected. This is a transparent tracking heuristic, not a kernel-checked formal proof.</div>
+    <div class="sectionhead"><div><div class="eyebrow">RECURSIVE EVIDENCE</div><h2>Claim graph</h2></div></div><div class="panel" id="claimTree"></div>
+  </section>
+
+  <section class="view" data-view="sources" hidden>
+    <h1 class="page-title">What we know.<br>What we don't.</h1><p class="page-lead">A documented sensation does not uniquely identify a cause. A time-symmetric equation is not the same as a controllable message to yesterday.</p>
+    <div class="boundary"><b>Physical status: UNRESOLVED.</b> StorySpace establishes neither human precognition nor operational retrocausality. No live subject recruitment, instrument data or new physics experiment occurred in making this site.</div>
+    <div class="sectionhead"><div><div class="eyebrow">PRIMARY LITERATURE</div><h2>Reading room</h2></div></div>
+    <a class="source" href="https://doi.org/10.1111/j.1467-8721.2008.00605.x" target="_blank" rel="noopener"><b>Cleary (2008) — Recognition memory, familiarity and déjà vu</b><small>Familiarity can occur without recollection of its source.</small></a>
+    <a class="source" href="https://doi.org/10.1177/0956797617743018" target="_blank" rel="noopener"><b>Cleary &amp; Claxton (2018) — Déjà vu: An illusion of prediction</b><small>In a studied navigation task, felt prediction increased but next-turn predictive performance did not exceed chance.</small></a>
+    <a class="source" href="https://doi.org/10.3758/PBR.16.6.1082" target="_blank" rel="noopener"><b>Cleary, Ryals &amp; Nomi (2009) — Similarity and déjà vu</b><small>Unrecalled scene resemblance can increase reported familiarity and déjà vu.</small></a>
+    <a class="source" href="https://doi.org/10.1103/PhysRevLett.84.1" target="_blank" rel="noopener"><b>Kim et al. (2000) — Delayed-choice quantum eraser</b><small>Real quantum-optics correlations; no operational demonstration of signaling to the past.</small></a>
+    <a class="source" href="docs/SOURCES.md"><b>Full research bibliography</b><small>More primary and methodological sources; scopes and caveats included.</small></a>
+    <a class="source" href="protocols/SS-001.md"><b>SS-001 prospective research protocol</b><small>Unexecuted: frozen goals require independent custody and a separate powered study plan.</small></a>
+    <div class="panel"><h3>Remember the experiment's actual shape.</h3><p>Experiences can be profound without being proof of backwards causation. The scientific obligation is to let an interpretation fail, preserve the report, and keep the records in the right order.</p><p><strong>The Zoo abides. The story can be wrong.</strong></p></div>
+  </section>
+
+  <footer class="footer"><div>StorySpace · Matthew Chenoweth Wright / Monolithic LLC · 2026</div><div>OFFLINE-FIRST · NO TELEMETRY · NO CLAIM OF RETROCAUSAL DISCOVERY · <a href="https://github.com/enuminous/StorySpace">SOURCE</a></div></footer>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script defer src="./src/core.js"></script><script defer src="./src/app.js"></script>
+</body></html>
